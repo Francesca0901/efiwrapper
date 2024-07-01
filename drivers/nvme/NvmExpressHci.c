@@ -84,10 +84,6 @@ NvmHcRwMmio (
 		else
 			*(volatile UINT64 *)(Address + Offset) = *(UINT64 *)Data;
 		break;
-
-	default:
-		ASSERT (FALSE);
-		return EFI_INVALID_PARAMETER;
 	}
 	MemoryFence ();
 
@@ -861,15 +857,15 @@ NvmeControllerInit (
 	Private->SqBuffer[2]        = (NVME_SQ *)(UINTN)(Private->Buffer + 4 * EFI_PAGE_SIZE);
 	Private->CqBuffer[2]        = (NVME_CQ *)(UINTN)(Private->Buffer + 5 * EFI_PAGE_SIZE);
 
-	DEBUG_NVME ((EFI_D_INFO, "Private->Buffer = [%016X]\n", (UINT64)(UINTN)Private->Buffer));
+	DEBUG_NVME ((EFI_D_INFO, "Private->Buffer = [%016llX]\n", (UINT64)(UINTN)Private->Buffer));
 	DEBUG_NVME ((EFI_D_INFO, "Admin     Submission Queue size (Aqa.Asqs) = [%08X]\n", Aqa.Asqs));
 	DEBUG_NVME ((EFI_D_INFO, "Admin     Completion Queue size (Aqa.Acqs) = [%08X]\n", Aqa.Acqs));
-	DEBUG_NVME ((EFI_D_INFO, "Admin     Submission Queue (SqBuffer[0]) = [%016X]\n", Private->SqBuffer[0]));
-	DEBUG_NVME ((EFI_D_INFO, "Admin     Completion Queue (CqBuffer[0]) = [%016X]\n", Private->CqBuffer[0]));
-	DEBUG_NVME ((EFI_D_INFO, "Sync  I/O Submission Queue (SqBuffer[1]) = [%016X]\n", Private->SqBuffer[1]));
-	DEBUG_NVME ((EFI_D_INFO, "Sync  I/O Completion Queue (CqBuffer[1]) = [%016X]\n", Private->CqBuffer[1]));
-	DEBUG_NVME ((EFI_D_INFO, "Async I/O Submission Queue (SqBuffer[2]) = [%016X]\n", Private->SqBuffer[2]));
-	DEBUG_NVME ((EFI_D_INFO, "Async I/O Completion Queue (CqBuffer[2]) = [%016X]\n", Private->CqBuffer[2]));
+	DEBUG_NVME ((EFI_D_INFO, "Admin     Submission Queue (SqBuffer[0]) = [%016llX]\n", (UINT64)(UINTN)Private->SqBuffer[0]));
+	DEBUG_NVME ((EFI_D_INFO, "Admin     Completion Queue (CqBuffer[0]) = [%016llX]\n", (UINT64)(UINTN)Private->CqBuffer[0]));
+	DEBUG_NVME ((EFI_D_INFO, "Sync  I/O Submission Queue (SqBuffer[1]) = [%016llX]\n", (UINT64)(UINTN)Private->SqBuffer[1]));
+	DEBUG_NVME ((EFI_D_INFO, "Sync  I/O Completion Queue (CqBuffer[1]) = [%016llX]\n", (UINT64)(UINTN)Private->CqBuffer[1]));
+	DEBUG_NVME ((EFI_D_INFO, "Async I/O Submission Queue (SqBuffer[2]) = [%016llX]\n", (UINT64)(UINTN)Private->SqBuffer[2]));
+	DEBUG_NVME ((EFI_D_INFO, "Async I/O Completion Queue (CqBuffer[2]) = [%016llX]\n", (UINT64)(UINTN)Private->CqBuffer[2]));
 
 	//
 	// Program admin queue attributes.

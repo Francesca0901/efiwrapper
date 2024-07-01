@@ -90,7 +90,7 @@ NvmeDumpStatus (
   IN NVME_CQ             *Cq
   )
 {
-	DEBUG_NVME ((EFI_D_VERBOSE, "Dump NVMe Completion Entry Status from [0x%x]:\n", Cq));
+	DEBUG_NVME ((EFI_D_VERBOSE, "Dump NVMe Completion Entry Status from [0x%p]:\n", (void *)Cq));
 	DEBUG_NVME ((EFI_D_VERBOSE, "  SQ Identifier : [0x%x], Phase Tag : [%d], Cmd Identifier : [0x%x]\n", Cq->Sqid, Cq->Pt, Cq->Cid));
 	DEBUG_NVME ((EFI_D_VERBOSE, "  NVMe Cmd Execution Result - "));
 
