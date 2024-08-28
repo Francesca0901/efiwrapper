@@ -22,6 +22,7 @@
 #include "dw3/XdciDWC.h"
 #include "dw3/XdciDevice.h"
 
+int usb_connect_state = 0;
 UINT32
 usb_reg_read (
 	IN UINTN     base,
@@ -861,6 +862,7 @@ dwc_xdci_process_device_event (
 	)
 {
 	UINT32 event;
+	static int state_ch_event_cnt = 0;
 
 	if (core_handle == NULL) {
 	        DEBUG ((DEBUG_INFO, "ERROR: dwc_xdci_process_device_event: INVALID handle\n"));
@@ -888,13 +890,23 @@ dwc_xdci_process_device_event (
 
 	case DWC_XDCI_EVENT_BUFF_DEV_CONN_DONE_EVENT:
 	        DEBUG ((DEBUG_INFO, "Device DWC_XDCI_EVENT_BUFF_DEV_CONN_DONE_EVENT\n"));
+		usb_connect_state  = 1;
+		state_ch_event_cnt = 0;
 	        dwc_xdci_process_device_reset_done (core_handle);
 	        break;
 
 	case DWC_XDCI_EVENT_BUFF_DEV_STATE_CHANGE_EVENT:
 	        DEBUG ((DEBUG_INFO, "Device DWC_XDCI_EVENT_BUFF_DEV_STATE_CHANGE_EVENT\n"));
 	        dwc_xdci_process_device_state_change_event (core_handle, int_line_event_buffer->event);
-	        break;
+		/* WA to calculate USB cable disconect event
+		 * because there is no USB disconnect event when disconnect usb cable
+		 * */
+		state_ch_event_cnt++;
+		if (state_ch_event_cnt > 2 ) {
+			usb_connect_state = 0;
+			state_ch_event_cnt = 0;
+		}
+		break;
 
 	case DWC_XDCI_EVENT_BUFF_DEV_WKUP_EVENT:
 	        DEBUG ((DEBUG_INFO, "Device DWC_XDCI_EVENT_BUFF_DEV_WKUP_EVENT\n"));
