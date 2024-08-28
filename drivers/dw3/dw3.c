@@ -967,6 +967,7 @@ _usb_unbind(__attribute__((__unused__)) EFI_USB_DEVICE_MODE_PROTOCOL *This)
 
 	return EFI_SUCCESS;
 }
+extern int usb_connect_state;
 
 static EFIAPI EFI_STATUS
 _usb_stop(__attribute__((__unused__)) EFI_USB_DEVICE_MODE_PROTOCOL *This)
@@ -977,10 +978,9 @@ _usb_stop(__attribute__((__unused__)) EFI_USB_DEVICE_MODE_PROTOCOL *This)
 
 static EFIAPI EFI_STATUS
 _usb_run(__attribute__((__unused__)) EFI_USB_DEVICE_MODE_PROTOCOL *This,
-	 UINT32 TimeoutMs)
+	 UINT32 TimeoutMs, UINT32 *state)
 {
 	EFI_STATUS Status = EFI_DEVICE_ERROR;
-
 	/* TODO: check initialized */
 
 	mXdciRun = TRUE;
@@ -993,6 +993,8 @@ _usb_run(__attribute__((__unused__)) EFI_USB_DEVICE_MODE_PROTOCOL *This,
 
 	        /* check for timeout */
 	        if (TimeoutMs == 0) {
+			if (state)
+				*state = usb_connect_state;
 	                return EFI_TIMEOUT;
 	        }
 	        udelay(50);
